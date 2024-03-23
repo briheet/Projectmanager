@@ -33,6 +33,7 @@ func (s *TasksService) RegisterRoutes(r *mux.Router) {
 func (s *TasksService) handleCreateTasks(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		WriteJson(w, http.StatusBadRequest, ErrorResponse{Error: "Invalid Request Payload!"})
 		return
 	}
 
@@ -42,14 +43,22 @@ func (s *TasksService) handleCreateTasks(w http.ResponseWriter, r *http.Request)
 
 	err = json.Unmarshal(body, &task)
 	if err != nil {
+		WriteJson(w, http.StatusBadRequest, ErrorResponse{Error: "Invalid Request Payload!"})
 		return
 	}
 
 	if err := validateTaskPayload(task); err != nil {
+		WriteJson(w, http.StatusBadRequest, ErrorResponse{Error: err.Error()})
 		return
 	}
 
-	t, err := s.store.CreateUser(task)
+	t, err := s.store.CreateTask(task)
+	if err != nil {
+		WriteJson(w, http.StatusInternalServerError, ErrorResponse{Error: "Error creating task"})
+		return
+	}
+
+	WriteJson(w, http.StatusCreated, t)
 }
 
 func validateTaskPayload(task *Task) error {
@@ -57,7 +66,7 @@ func validateTaskPayload(task *Task) error {
 		return errNameRequired
 	}
 
-	if task.ProjectId == 0 {
+	if task.ProjectID == 0 {
 		return errProjectIDRequired
 	}
 

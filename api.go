@@ -23,7 +23,7 @@ func (s *APIServer) Serve() {
 	// our services
 
 	tasksService := NewTaskService(s.store)
-	tasksService.RegisterRoutes(router)
+	tasksService.RegisterRoutes(subrouter)
 
 	log.Printf("starting our service at %s", s.addr)
 	log.Fatal(http.ListenAndServe(s.addr, subrouter))

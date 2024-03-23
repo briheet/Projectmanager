@@ -35,7 +35,7 @@ func (s *MYSQLSTORAGE) Init() (*sql.DB, error) {
 		return nil, err
 	}
 
-	if err := createUserTable(); err != nil {
+	if err := s.createUserTable(); err != nil {
 		return nil, err
 	}
 
@@ -50,13 +50,12 @@ func (s *MYSQLSTORAGE) createProjectTable() error {
 	_, err := s.db.Exec(`
     CREATE TABLE IF NOT EXISTS projects (
      id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     name VARCHAR(255) NOT NULL,
+     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id)
 
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
     `)
 	if err != nil {
 		return err
@@ -76,8 +75,8 @@ func (s *MYSQLSTORAGE) createTasksTable() error {
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(id),
-    FORIEGN KEY (assignedToID), REFERENCES users(id),
-    FORIEGN KEY (projectID) REFERENCES project(id),
+    FOREIGN KEY (assignedToID) REFERENCES users(id),
+    FOREIGN KEY (projectID) REFERENCES projects(id)
 
     )
     ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -100,7 +99,7 @@ func (s *MYSQLSTORAGE) createUserTable() error {
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(id),
-    UNIQUE key(email), 
+    UNIQUE key(email)
 
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     `)

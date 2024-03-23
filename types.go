@@ -4,6 +4,10 @@ import (
 	"time"
 )
 
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
 type Task struct {
 	ID           int64     `json:"id"`
 	Name         string    `json:"name"`
