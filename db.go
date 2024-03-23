@@ -39,7 +39,7 @@ func (s *MYSQLSTORAGE) Init() (*sql.DB, error) {
 		return nil, err
 	}
 
-	if err := createTasksTable(); err != nil {
+	if err := s.createTasksTable(); err != nil {
 		return nil, err
 	}
 
@@ -60,4 +60,34 @@ func (s *MYSQLSTORAGE) createProjectTable() error {
     `)
 
 	return err
+}
+
+func (s *MYSQLSTORAGE) createTasksTable() error {
+	_, err := s.db.Exec(`
+    CREATE TABLE IF NOT EXISTS tasks (
+     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    status ENUM( 'TODO', 'IN_PROGRESS', 'IN_TESTING', 'DONE') NOT NULL DEFAULT 'TODO',
+    projectID INT UNSIGNED NOT NULL,
+    assignedToID INT UNSIGNED NOT NULL,
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY(id),
+    FORIEGN KEY (assignedToID), REFERENCES users(id),
+    FORIEGN KEY (projectID) REFERENCES project(id),
+
+    )
+    ENGINE=InnoDB DEFAULT CHARSET=utf8
+    `)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *MYSQLSTORAGE) createUserTable() error {
+	_, err := s.db.Exec(`
+    
+    `)
 }
