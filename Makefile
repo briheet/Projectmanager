@@ -1,8 +1,8 @@
 run: build
-	go run .
+	@go run .
 
 build: 
-	go build .
+	@go build .
 
 test: 
-	go test ./...
+	@go test ./...
