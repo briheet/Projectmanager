@@ -58,8 +58,11 @@ func (s *MYSQLSTORAGE) createProjectTable() error {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
     `)
+	if err != nil {
+		return err
+	}
 
-	return err
+	return nil
 }
 
 func (s *MYSQLSTORAGE) createTasksTable() error {
@@ -77,7 +80,7 @@ func (s *MYSQLSTORAGE) createTasksTable() error {
     FORIEGN KEY (projectID) REFERENCES project(id),
 
     )
-    ENGINE=InnoDB DEFAULT CHARSET=utf8
+    ENGINE=InnoDB DEFAULT CHARSET=utf8;
     `)
 	if err != nil {
 		return err
@@ -88,6 +91,22 @@ func (s *MYSQLSTORAGE) createTasksTable() error {
 
 func (s *MYSQLSTORAGE) createUserTable() error {
 	_, err := s.db.Exec(`
-    
+    CREATE TABLE IF NOT EXISTS users (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
+    firstname VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY(id),
+    UNIQUE key(email), 
+
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     `)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
