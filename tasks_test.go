@@ -10,7 +10,27 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func TestGetTask(t *testing) {
+func TestGetTask(t *testing.T) {
+	ms := &MockStore{}
+	service := NewTaskService(ms)
+
+	t.Run("should return the task", func(t *testing.T) {
+		req, err := http.NewRequest(http.MethodGet, "/tasks/42", nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		rr := httptest.NewRecorder()
+		router := mux.NewRouter()
+
+		router.HandleFunc("/tasks/{id}", service.handleGetTask)
+
+		router.ServeHTTP(rr, req)
+
+		if rr.Code != http.StatusOK {
+			t.Errorf("invald status code, it should fail")
+		}
+	})
 }
 
 func TestCreateTask(t *testing.T) {
