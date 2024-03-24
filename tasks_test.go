@@ -10,6 +10,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func TestGetTask(t *testing) {
+}
+
 func TestCreateTask(t *testing.T) {
 	ms := &MockStore{}
 	service := NewTaskService(ms)
