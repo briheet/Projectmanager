@@ -4,7 +4,7 @@ import "database/sql"
 
 type Store interface {
 	// User
-	CreateUser() error
+	CreateUser(user *User) (*User, error)
 	CreateTask(t *Task) (*Task, error)
 	GetTask(id string) (*Task, error)
 	GetUserByID(id string) (*User, error)
@@ -20,8 +20,20 @@ func NewStore(db *sql.DB) *Storage {
 	}
 }
 
-func (s *Storage) CreateUser() error {
-	return nil
+func (s *Storage) CreateUser(user *User) (*User, error) {
+	rows, err := s.db.Exec("INSERT INTO users (email, firstName, lastName, password) VALUES (?, ?, ?, ?)", user.Email, user.FirstName, user.LastName, user.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := rows.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	user.ID = id
+
+	return user, nil
 }
 
 func (s *Storage) CreateTask(t *Task) (*Task, error) {

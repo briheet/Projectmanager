@@ -22,6 +22,9 @@ func (s *APIServer) Serve() {
 
 	// our services
 
+	usersService := NewUserService(s.store)
+	usersService.RegisterRoutes(subrouter)
+
 	tasksService := NewTaskService(s.store)
 	tasksService.RegisterRoutes(subrouter)
 
