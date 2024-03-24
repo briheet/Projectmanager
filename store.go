@@ -47,6 +47,11 @@ func (s *Storage) GetTask(id string) (*Task, error) {
 	return &t, err
 }
 
-func (s *Storage) GetUserByID(userID string) (*Task, error) {
+func (s *Storage) GetUserByID(id string) (*User, error) {
+	var u User
+
+	err := s.db.QueryRow("SELECT id, email, firstName, lastName, createdAt FROM users WHERE id=?", id).Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.CreatedAt)
+	return &u, err
+
 	return &User{}, nil
 }
