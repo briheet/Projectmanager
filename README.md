@@ -5,3 +5,9 @@ Another problem was that we had to go to them for submitting our papers and they
 This is just the 10% problems that we face.
 
 This prompted me to work to this API and dockerize this as a part of my learning and try to work on a real problem.
+
+To run the Dockerfile
+=> docker build -t projectmanager-api .
+
+To run the APi
+=> make

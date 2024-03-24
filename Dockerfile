@@ -1,8 +1,24 @@
-FROM mysql:latest
+FROM golang:1.21.6 AS build-stage
+WORKDIR /app
 
-# Environment variables
-ENV MYSQL_DATABASE=projectmanager
-ENV MYSQL_ROOT_PASSWORD=password
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY  *.go  ./ 
+
+RUN CGO_ENABLED=0  GOOS=linux go build -o /api
+
+FROM build-stage AS run-test-stage
+RUN go test -v  ./...
 
 
-EXPOSE 3306
+FROM scratch as run-release-stage
+WORKDIR /app
+
+COPY  --from=build-stage /api /api
+
+EXPOSE 8080
+
+CMD [ "api" ]
+
+
