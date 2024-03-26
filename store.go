@@ -64,6 +64,4 @@ func (s *Storage) GetUserByID(id string) (*User, error) {
 
 	err := s.db.QueryRow("SELECT id, email, firstName, lastName, createdAt FROM users WHERE id=?", id).Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.CreatedAt)
 	return &u, err
-
-	return &User{}, nil
 }
