@@ -45,7 +45,7 @@ func (s *UserService) handleUserRegister(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if err := validateUserPayload(user); err != nil {
+	if err = validateUserPayload(user); err != nil {
 		WriteJson(w, http.StatusBadRequest, ErrorResponse{Error: "invalid request payload"})
 		return
 	}
